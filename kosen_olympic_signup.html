@@ -1,0 +1,297 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #000; }
+  .wrap {
+    background: #000;
+    min-height: 100vh;
+    padding: 2rem 1.5rem;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+    color: #ff0000;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    color: #ff0000;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #ff0000;
+    margin-bottom: 2rem;
+  }
+  label {
+    display: block;
+    font-size: 15px;
+    color: #ff0000;
+    margin-bottom: 6px;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+  }
+  .field { margin-bottom: 1.5rem; }
+  input[type="text"] {
+    background: #000;
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    font-size: 16px;
+    padding: 8px 12px;
+    width: 100%;
+    border-radius: 4px;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+    outline: none;
+  }
+  input[type="text"]::placeholder { color: #880000; }
+  input[type="text"]:focus { border-color: #ff4444; }
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option-card {
+    border: 1px solid #ff0000;
+    border-radius: 4px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .option-card:hover { background: #1a0000; }
+  .option-card.selected { background: #1a0000; border-color: #ff4444; }
+  .option-card.full { opacity: 0.4; cursor: not-allowed; }
+  .option-card input[type="radio"] {
+    accent-color: #ff0000;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .option-info { flex: 1; }
+  .option-name {
+    font-size: 16px;
+    color: #ff0000;
+    font-weight: 500;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+  }
+  .option-meta {
+    font-size: 13px;
+    color: #cc0000;
+    margin-top: 4px;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+  }
+  .capacity-badge {
+    font-size: 12px;
+    color: #ff0000;
+    border: 1px solid #ff0000;
+    border-radius: 4px;
+    padding: 2px 8px;
+    white-space: nowrap;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+  }
+  .capacity-badge.full-badge {
+    color: #660000;
+    border-color: #660000;
+  }
+  .submit-btn {
+    width: 100%;
+    background: #000;
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+    transition: background 0.15s;
+  }
+  .submit-btn:hover { background: #1a0000; }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .divider {
+    border: none;
+    border-top: 1px solid #440000;
+    margin: 2rem 0 1.5rem;
+  }
+  .results-title {
+    font-size: 16px;
+    color: #ff0000;
+    margin-bottom: 1rem;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+  }
+  .entry-list { display: flex; flex-direction: column; gap: 8px; }
+  .entry-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid #440000;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #ff0000;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+  }
+  .entry-num { font-weight: 500; min-width: 60px; }
+  .entry-event { color: #cc0000; }
+  .error-msg {
+    color: #ff4444;
+    font-size: 13px;
+    margin-top: 8px;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+  }
+  .full-notice {
+    color: #ff0000;
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #880000;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 8px;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+  }
+  .empty-state {
+    font-size: 13px;
+    color: #660000;
+    font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "MS Mincho", serif;
+  }
+</style>
+
+<div class="wrap">
+  <h2 class="sr-only" style="position:absolute;left:-9999px;">高専オリンピック追加募集フォーム</h2>
+  <h1>高専オリンピック追加募集</h1>
+  <p class="subtitle">（先着締切）</p>
+
+  <div class="field">
+    <label for="student-num">出席番号</label>
+    <input type="text" id="student-num" placeholder="例：15" maxlength="10">
+    <p class="error-msg" id="num-error" style="display:none;">出席番号を入力してください。</p>
+  </div>
+
+  <div class="field">
+    <label>競技を選択してください</label>
+    <div class="options" id="options-list"></div>
+    <p class="error-msg" id="event-error" style="display:none;">競技を選択してください。</p>
+  </div>
+
+  <button class="submit-btn" id="submit-btn" onclick="handleSubmit()">応募する</button>
+
+  <hr class="divider" id="results-divider" style="display:none;">
+
+  <div id="results-section" style="display:none;">
+    <p class="results-title">応募状況</p>
+    <div class="entry-list" id="entry-list"></div>
+  </div>
+</div>
+
+<script>
+  const EVENTS = [
+    { id: "janken", name: "ジャンケン", note: "雨", capacity: 1 },
+    { id: "hokku", name: "ホフク前進リレー", note: "雨", capacity: 2 }
+  ];
+
+  let entries = [];
+
+  function getCount(eventId) {
+    return entries.filter(e => e.event === eventId).length;
+  }
+
+  function renderOptions() {
+    const container = document.getElementById("options-list");
+    container.innerHTML = "";
+    EVENTS.forEach(ev => {
+      const count = getCount(ev.id);
+      const isFull = count >= ev.capacity;
+      const card = document.createElement("label");
+      card.className = "option-card" + (isFull ? " full" : "");
+      card.innerHTML = `
+        <input type="radio" name="event" value="${ev.id}" ${isFull ? "disabled" : ""}>
+        <div class="option-info">
+          <div class="option-name">${ev.name}</div>
+          <div class="option-meta">天候：${ev.note}｜定員 ${ev.capacity}人</div>
+        </div>
+        <span class="capacity-badge ${isFull ? "full-badge" : ""}">${isFull ? "定員に達しました" : `残り ${ev.capacity - count}人`}</span>
+      `;
+      container.appendChild(card);
+
+      card.querySelectorAll("input[type=radio]").forEach(r => {
+        r.addEventListener("change", () => {
+          document.querySelectorAll(".option-card").forEach(c => c.classList.remove("selected"));
+          if (r.checked) card.classList.add("selected");
+        });
+      });
+    });
+  }
+
+  function renderEntries() {
+    const list = document.getElementById("entry-list");
+    const divider = document.getElementById("results-divider");
+    const section = document.getElementById("results-section");
+
+    if (entries.length === 0) {
+      section.style.display = "none";
+      divider.style.display = "none";
+      return;
+    }
+
+    divider.style.display = "block";
+    section.style.display = "block";
+    list.innerHTML = "";
+    entries.forEach((e, i) => {
+      const row = document.createElement("div");
+      row.className = "entry-row";
+      const evName = EVENTS.find(ev => ev.id === e.event)?.name || e.event;
+      row.innerHTML = `<span class="entry-num">出席番号 ${e.num}</span><span class="entry-event">${evName}</span>`;
+      list.appendChild(row);
+    });
+
+    EVENTS.forEach(ev => {
+      const count = getCount(ev.id);
+      if (count >= ev.capacity) {
+        const notice = document.createElement("div");
+        notice.className = "full-notice";
+        notice.textContent = `「${ev.name}」は定員に達しました。`;
+        const alreadyExists = list.querySelector(`[data-full="${ev.id}"]`);
+        if (!alreadyExists) {
+          notice.setAttribute("data-full", ev.id);
+          list.appendChild(notice);
+        }
+      }
+    });
+  }
+
+  function handleSubmit() {
+    const numInput = document.getElementById("student-num");
+    const selectedRadio = document.querySelector('input[name="event"]:checked');
+    let valid = true;
+
+    document.getElementById("num-error").style.display = "none";
+    document.getElementById("event-error").style.display = "none";
+
+    if (!numInput.value.trim()) {
+      document.getElementById("num-error").style.display = "block";
+      valid = false;
+    }
+    if (!selectedRadio) {
+      document.getElementById("event-error").style.display = "block";
+      valid = false;
+    }
+    if (!valid) return;
+
+    const eventId = selectedRadio.value;
+    const ev = EVENTS.find(e => e.id === eventId);
+    if (getCount(eventId) >= ev.capacity) {
+      document.getElementById("event-error").textContent = "この競技は定員に達しています。";
+      document.getElementById("event-error").style.display = "block";
+      return;
+    }
+
+    entries.push({ num: numInput.value.trim(), event: eventId });
+
+    numInput.value = "";
+    document.querySelectorAll('input[name="event"]').forEach(r => r.checked = false);
+    document.querySelectorAll(".option-card").forEach(c => c.classList.remove("selected"));
+
+    renderOptions();
+    renderEntries();
+  }
+
+  renderOptions();
+</script>
